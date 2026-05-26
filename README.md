@@ -35,8 +35,9 @@ npx md-format-skill
 **手动安装**
 
 ```bash
-mkdir -p ~/.claude/skills/md-format
-cp SKILL.md ~/.claude/skills/md-format/
+git clone https://github.com/dave-wind/md-format-skill.git
+cd md-format-skill
+node install.js
 ```
 
 **npm 包页面：** https://www.npmjs.com/package/md-format-skill
