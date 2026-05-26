@@ -1,8 +1,8 @@
 # md-format
 
-一个 AI 编程助手 Skill，将任何文档/对话内容格式化为结构清晰、视觉精美的 Markdown 文件。
+一个 AI Skill，将任何文档/对话内容格式化为结构清晰、视觉精美的 Markdown 文件。
 
-支持 Claude Code、Codex、OpenCode。
+支持 Claude Code、Codex、OpenCode、Deepseek
 
 ## 特性
 
