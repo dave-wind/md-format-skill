@@ -61,39 +61,48 @@ Markdown 渲染器之间差异很大。LaTeX 公式在 Typora 能渲染但 GitHu
 所有公式放在代码块中，用缩进对齐展示计算过程：
 
 ```
-毛利率 = 毛利润 ÷ 收入 × 100%
-       = 48.591 ÷ 255.326 × 100%
-       = 19.0%
+平均速度 = 总路程 ÷ 总时间
+         = 120 km ÷ 2 h
+         = 60 km/h
 ```
 
 多个相关公式放在同一个代码块中，用空行分隔：
 
 ```
-毛利润 = 收入 - 销售成本
-营业利润 = 毛利润 - 研发费用 - SG&A - 其他营业费用
-净利润 = 营业利润 ± 营业外收支 - 所得税
+圆面积 = π × r²
+圆周长 = 2 × π × r
+
+球体积 = (4/3) × π × r³
+球表面积 = 4 × π × r²
 ```
 
 ## Mermaid 图表规则
 
 每个 Mermaid 图表的节点必须带颜色样式。配色语义：
 
-- 正面/收入/盈利 → 绿色系：`fill:#C8E6C9,stroke:#2E7D32` 或 `fill:#4CAF50,color:#fff`
-- 负面/支出/亏损 → 红色系：`fill:#FFCDD2,stroke:#c62828` 或 `fill:#f44336,color:#fff`
+- 正面/成功/完成 → 绿色系：`fill:#C8E6C9,stroke:#2E7D32` 或 `fill:#4CAF50,color:#fff`
+- 负面/失败/风险 → 红色系：`fill:#FFCDD2,stroke:#c62828` 或 `fill:#f44336,color:#fff`
 - 中性/过程/信息 → 蓝色系：`fill:#E3F2FD,stroke:#1565C0` 或 `fill:#2196F3,color:#fff`
-- 警示/重要/转折 → 橙色系：`fill:#FFF3E0,stroke:#FF9800` 或 `fill:#FF9800,color:#fff`
+- 警示/重要/注意 → 橙色系：`fill:#FFF3E0,stroke:#FF9800` 或 `fill:#FF9800,color:#fff`
 - 核心/总结/关键 → 紫色系：`fill:#7B1FA2,color:#fff,stroke:#4A148C`
 
 示例：
 
 ```mermaid
 flowchart TD
-    A["收入 255 亿"] --> B["- 成本 207 亿"]
-    B --> C["= 毛利润 48 亿"]
+    A["需求分析"] --> B["方案设计"]
+    B --> C["实现"]
+    C --> D{"测试通过？"}
+    D -->|是| E["上线"]
+    D -->|否| F["修复问题"]
+    F --> C
 
-    style A fill:#C8E6C9,stroke:#2E7D32
-    style B fill:#FFCDD2,stroke:#c62828
+    style A fill:#E3F2FD,stroke:#1565C0
+    style B fill:#E3F2FD,stroke:#1565C0
     style C fill:#E3F2FD,stroke:#1565C0
+    style D fill:#FFF3E0,stroke:#FF9800
+    style E fill:#C8E6C9,stroke:#2E7D32
+    style F fill:#FFCDD2,stroke:#c62828
 ```
 
 选择图表类型的原则：
@@ -109,9 +118,11 @@ flowchart TD
 - 关键数据加粗
 
 ```markdown
-| 指标 | 数值 | 变化 |
+| 指标 | 数值 | 状态 |
 |------|:----:|:----:|
-| 毛利率 | **19.0%** | +11.4pp |
+| 响应时间 | **120ms** | 正常 |
+| 错误率 | **0.3%** | 正常 |
+| 可用性 | **99.9%** | 正常 |
 ```
 
 ## 内容增强手法
