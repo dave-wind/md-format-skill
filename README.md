@@ -1,6 +1,8 @@
 # md-format
 
-一个 Claude Code Skill，将任何文档/对话内容格式化为结构清晰、视觉精美的 Markdown 文件。
+一个 AI 编程助手 Skill，将任何文档/对话内容格式化为结构清晰、视觉精美的 Markdown 文件。
+
+支持 Claude Code、Codex、OpenCode。
 
 ## 特性
 
@@ -56,7 +58,7 @@ Typora、GitHub、VS Code 三个渲染器对同一语法的支持差异很大：
 
 ## 触发方式
 
-在 Claude Code 中说以下任意一种：
+在支持 skill 的 AI 编程助手中说以下任意一种：
 
 - "格式化md"
 - "美化markdown"
