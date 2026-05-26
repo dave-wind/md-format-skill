@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Markdown formatting skill for AI coding agents — formats any content into clean, beautiful .md files compatible with Typora/GitHub/VS Code",
   "bin": {
-    "md-format-skill": "./install.js"
+    "md-format-skill": "install.js"
   },
   "files": [
     "SKILL.md",

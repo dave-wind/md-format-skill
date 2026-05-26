@@ -24,12 +24,22 @@
 
 ## 安装
 
-将 `SKILL.md` 放到你的 Claude Code skills 目录：
+**推荐：一行命令安装（npx）**
+
+```bash
+npx md-format-skill
+```
+
+自动检测并安装到 Claude Code、Codex、OpenCode。
+
+**手动安装**
 
 ```bash
 mkdir -p ~/.claude/skills/md-format
 cp SKILL.md ~/.claude/skills/md-format/
 ```
+
+**npm 包页面：** https://www.npmjs.com/package/md-format-skill
 
 ## 输出示例
 
