@@ -33,6 +33,10 @@ git init
 # 创建基础文件
 touch SKILL.md package.json install.js README.md LICENSE .gitignore
 
+# 创建 Codex App 配置
+mkdir -p agents
+touch agents/openai.yaml
+
 # 创建评估目录
 mkdir -p evals
 ```
@@ -61,7 +65,8 @@ evals/feedback.json
   },
   "files": [
     "SKILL.md",
-    "install.js"
+    "install.js",
+    "agents/"
   ],
   "keywords": [
     "skill",
@@ -99,6 +104,28 @@ fs.copyFileSync(skillFile, path.join(targetDir, 'SKILL.md'));
 
 console.log(`✓ Skill installed to ${targetDir}`);
 ```
+
+#### `agents/openai.yaml`
+
+Codex App 需要这个文件来识别和展示 skill。每个 skill 都需要创建：
+
+```yaml
+interface:
+  display_name: "My Skill Name"
+  short_description: "一句话描述 skill 功能"
+  brand_color: "#2196F3"       # 品牌 色，用于 Codex App UI
+  default_prompt: "触发提示词"
+
+policy:
+  allow_implicit_invocation: false
+```
+
+字段说明：
+- `display_name`: 在 Codex App 中显示的名称
+- `short_description`: 简短描述，用于 skill 列表
+- `brand_color`: 十六进制颜色，建议与 skill 主题相关
+- `default_prompt`: 用户在 App 中点击 skill 时自动填入的提示词
+- `allow_implicit_invocation`: 是否允许隐式触发（一般设 false）
 
 ---
 
@@ -369,39 +396,66 @@ SyntaxError: invalid syntax (Python 2.7)
 
 ## Skill 管理
 
-### 查看已安装的 Skill
+所有操作通过 `install.js` 完成，跨平台（macOS / Windows / Linux）。
+
+### 查看所有已安装的 Skill
 
 ```bash
-# 列出所有已安装的 skill
-ls ~/.claude/skills/
-
-# 查看某个 skill 的内容
-cat ~/.claude/skills/my-skill-name/SKILL.md
+node install.js --list
 ```
 
-### 删除已安装的 Skill
+输出示例：
+```
+Installed skills:
 
-```bash
-# 删除单个 skill
-rm -rf ~/.claude/skills/my-skill-name
-
-# 验证已删除
-ls ~/.claude/skills/ | grep my-skill-name
+  Claude Code (/Users/xxx/.claude/skills):
+    - md-format
+    - skill-creator
 ```
 
-### 重新安装 Skill
-
-修改了 SKILL.md 后，需要重新安装才能生效：
+### 查看某个 Skill 的安装状态
 
 ```bash
-# 方式 1: 用项目的 install.js
+node install.js --status
+```
+
+输出示例：
+```
+Skill: md-format
+
+  ✓ Claude Code (/Users/xxx/.claude/skills/md-format)
+      SKILL.md
+  ✗ Codex (/Users/xxx/.codex/skills/md-format)
+```
+
+### 卸载 Skill（从所有 agent 目录删除）
+
+```bash
+node install.js --uninstall
+```
+
+这会从以下所有目录中删除 skill：
+- `~/.claude/skills/` (Claude Code)
+- `~/.codex/skills/` (Codex)
+- `~/.agents/skills/` (Agents)
+- `~/.opencode/skills/` (OpenCode)
+
+### 重新安装（修改 SKILL.md 后）
+
+```bash
 node install.js
+```
 
-# 方式 2: 用 npm link（如果 package.json 配置了 bin）
-npm link
+安装时会自动覆盖旧版本。
 
-# 方式 3: 手动复制
-cp SKILL.md ~/.claude/skills/my-skill-name/SKILL.md
+### 安装到指定 agent
+
+```bash
+# 只安装到 Claude Code
+node install.js --agent claude
+
+# 安装到所有支持的 agent
+node install.js --agent all
 ```
 
 ### 安装别人的 Skill
@@ -416,6 +470,17 @@ cd some-skill
 node install.js
 ```
 
+### ⚠️ 常见错误
+
+```bash
+# 错误：漏写了 skills 目录
+rm -rf ~/.claude/md-format          # ✗ 什么都没删
+rm -rf ~/.claude/skills/md-format   # ✓ 正确路径
+
+# 正确做法：用 install.js 管理
+node install.js --uninstall          # ✓ 自动清理所有 agent 目录
+```
+
 ---
 
 ## 发布到 npm
@@ -426,30 +491,31 @@ npm 包通过 `package.json` 的 `files` 字段控制打包范围。原则：**�
 
 #### 文件分类
 
-| 文件/目录 | npm 打包 | 安装到 ~/.claude/skills | 原因 |
+| 文件/目录 | npm 打包 | 安装到 agent skills | 原因 |
 |:--|:--:|:--:|:--|
 | `SKILL.md` | ✅ | ✅ | Skill 核心定义，必须 |
 | `install.js` | ✅ | ❌ | 安装脚本，执行完不需要 |
 | `package.json` | ✅ | ❌ | npm 元数据 |
+| `agents/openai.yaml` | ✅ | ✅ | Codex App 配置，必须 |
 | `README.md` | 自动 | ❌ | 用户文档 |
 | `LICENSE` | 自动 | ❌ | 许可证 |
 | `references/` | 视情况 | ✅ | 参考文档，大 skill 需要 |
 | `scripts/` | 视情况 | ✅ | 可执行脚本，skill 调用的工具 |
 | `assets/` | 视情况 | ✅ | 模板、图片等资源 |
+| `docs/` | ❌ | ❌ | 开发文档 |
 | `evals/` | ❌ | ❌ | 测试数据，仅供开发 |
-| `SKILL_DEVELOPMENT_WORKFLOW.md` | ❌ | ❌ | 开发文档 |
 
 #### package.json 的 files 字段
 
 ```json
-// 简单 skill（只有 SKILL.md）
-"files": ["SKILL.md", "install.js"]
+// 简单 skill（最小配置）
+"files": ["SKILL.md", "install.js", "agents/"]
 
 // 中等 skill（有参考文档）
-"files": ["SKILL.md", "install.js", "references/"]
+"files": ["SKILL.md", "install.js", "agents/", "references/"]
 
 // 复杂 skill（有脚本和资源）
-"files": ["SKILL.md", "install.js", "references/", "scripts/", "assets/"]
+"files": ["SKILL.md", "install.js", "agents/", "references/", "scripts/", "assets/"]
 ```
 
 #### install.js 的复制逻辑
@@ -526,8 +592,8 @@ npm unpublish my-skill-name --force
 
 - [ ] `package.json` 的 `name` 在 npm 上没有被占用
 - [ ] `version` 比上次发布版本高
-- [ ] `files` 字段包含所有运行时文件（`SKILL.md` + `references/` + `scripts/` 等）
-- [ ] `files` 字段不包含开发文件（`evals/`、`SKILL_DEVELOPMENT_WORKFLOW.md`）
+- [ ] `files` 字段包含所有运行时文件（`SKILL.md` + `agents/` + `references/` + `scripts/` 等）
+- [ ] `files` 字段不包含开发文件（`docs/`、`evals/`）
 - [ ] `description` 清晰描述 skill 功能
 - [ ] `repository.url` 指向正确的 git 仓库
 - [ ] `npm pack --dry-run` 输出干净（无 evals、无 .git）

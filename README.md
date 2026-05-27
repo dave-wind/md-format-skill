@@ -34,15 +34,15 @@
 
 不是所有内容都需要图表，选择原则如下：
 
-| 内容类型 | 推荐形式 |
-|---------|---------|
-| 步骤 / 流程 / 因果关系 | Mermaid flowchart |
-| 多维度数据对比 | Markdown 表格 |
-| 占比 / 构成 | Mermaid pie |
-| 分组对比 | Mermaid flowchart + subgraph |
-| 复杂趋势 | Mermaid xychart-beta |
-| 类比 / 解释 / 警示 | 引用块 `>` |
-| 数学表达式 | 代码块（纯文本对齐） |
+| 内容类型               | 推荐形式                     |
+| ---------------------- | ---------------------------- |
+| 步骤 / 流程 / 因果关系 | Mermaid flowchart            |
+| 多维度数据对比         | Markdown 表格                |
+| 占比 / 构成            | Mermaid pie                  |
+| 分组对比               | Mermaid flowchart + subgraph |
+| 复杂趋势               | Mermaid xychart-beta         |
+| 类比 / 解释 / 警示     | 引用块 `>`                   |
+| 数学表达式             | 代码块（纯文本对齐）         |
 
 Mermaid 图表的每个节点必须带颜色样式，配色遵循语义：绿色=成功/正面，红色=失败/风险，蓝色=过程/中性，橙色=警示/注意，紫色=核心/总结。
 
@@ -70,13 +70,23 @@ Typora、GitHub、VS Code 三个渲染器对同一语法的支持差异很大：
 
 ## 安装
 
-**推荐：一行命令安装（npx）**
+**推荐：npx 一行命令**
 
 ```bash
 npx md-format-skill
 ```
 
-自动检测并安装到 Claude Code、Codex、OpenCode。
+自动检测并安装到 Claude Code、Codex、OpenCode、Deepseek 等支持的 agent。
+
+**管理命令**
+
+```bash
+npx md-format-skill --list            # 查看所有已安装的 skill
+npx md-format-skill --status          # 查看当前 skill 安装状态
+npx md-format-skill --uninstall       # 从所有 agent 卸载
+npx md-format-skill --agent claude    # 只安装到 Claude Code
+npx md-format-skill --agent codex     # 只安装到 Codex
+```
 
 **手动安装**
 
@@ -95,14 +105,15 @@ skill 会生成如下结构的文件：
 ```markdown
 # 标题
 
-|  |  |
-|:---:|:---:|
-| **来源** | 具体来源 |
+|          |            |
+| :------: | :--------: |
+| **来源** |  具体来源  |
 | **日期** | 2026-05-25 |
 
 ---
 
 ## 目录
+
 - [一、章节名](#一章节名)
 
 ---
@@ -113,13 +124,13 @@ skill 会生成如下结构的文件：
 
 ---
 
-*来源 | 日期*
+_来源 | 日期_
 ```
 
 ## 配色规则
 
-| 语义 | 颜色 |
-|------|------|
+| 语义           | 颜色   |
+| -------------- | ------ |
 | 正面/成功/完成 | 绿色系 |
 | 负面/失败/风险 | 红色系 |
 | 中性/过程/信息 | 蓝色系 |

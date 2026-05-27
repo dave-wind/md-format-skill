@@ -1,0 +1,8 @@
+interface:
+  display_name: "MD Format"
+  short_description: "将任何内容整理为结构清晰、视觉精美的 Markdown 文件"
+  brand_color: "#2196F3"
+  default_prompt: "帮我把以下内容整理成 md 文件，兼容 Typora 和 GitHub："
+
+policy:
+  allow_implicit_invocation: false

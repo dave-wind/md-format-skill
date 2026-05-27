@@ -5,9 +5,25 @@ const path = require("path");
 const os = require("os");
 const { execSync } = require("child_process");
 
-const SKILL_NAME = "md-format";
+// ── 配置 ────────────────────────────────────────────────
+// 自动从 SKILL.md frontmatter 读取 name，无需手动配置
+
 const SKILL_SOURCE = path.resolve(__dirname);
 
+function readSkillName() {
+  const skillPath = path.join(SKILL_SOURCE, "SKILL.md");
+  const content = fs.readFileSync(skillPath, "utf-8");
+  const match = content.match(/^name:\s*(.+)$/m);
+  if (!match) {
+    console.error("Error: 'name' not found in SKILL.md frontmatter");
+    process.exit(1);
+  }
+  return match[1].trim();
+}
+
+const SKILL_NAME = readSkillName();
+
+// agent 安装目录（跨平台）
 const AGENT_CONFIG = {
   codex: {
     dirs: [
@@ -18,30 +34,54 @@ const AGENT_CONFIG = {
     label: "Codex",
   },
   claude: {
-    dirs: [
-      path.join(os.homedir(), ".claude", "skills"),
-    ],
+    dirs: [path.join(os.homedir(), ".claude", "skills")],
     commands: ["claude"],
     label: "Claude Code",
   },
   opencode: {
-    dirs: [
-      path.join(os.homedir(), ".opencode", "skills"),
-    ],
+    dirs: [path.join(os.homedir(), ".opencode", "skills")],
     commands: ["opencode"],
     label: "OpenCode",
   },
 };
 
-const EXCLUDE_FILES = new Set(["install.js", "package.json", "package-lock.json"]);
+// ── 约定：排除规则 ──────────────────────────────────────
+// 以下目录/文件不会复制到 agent skills 目录
+//
+//   排除原因              | 约定位置
+//   ──────────────────── | ──────────────────────
+//   安装脚本和包元数据     | 根目录 install.js / package.json
+//   开发文档              | docs/
+//   测试数据和评分脚本     | evals/
+//   Git / 编辑器 / 依赖   | .git / .DS_Store / node_modules
+//   npm 打包配置          | .npmignore
+
+const EXCLUDE = new Set([
+  // 安装脚本和包元数据
+  "install.js",
+  "package.json",
+  "package-lock.json",
+  // 开发文档（所有 MD 都放 docs/）
+  "docs",
+  // 测试数据
+  "evals",
+  // Git / 编辑器 / 依赖
+  ".git",
+  ".DS_Store",
+  ".gitignore",
+  "node_modules",
+  // npm 打包配置
+  ".npmignore",
+]);
+
+// ── 工具函数 ────────────────────────────────────────────
 
 function copyRecursive(src, dest) {
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest, { recursive: true });
   }
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-  for (const entry of entries) {
-    if (EXCLUDE_FILES.has(entry.name)) continue;
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    if (EXCLUDE.has(entry.name)) continue;
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
     if (entry.isDirectory()) {
@@ -56,7 +96,9 @@ function detectAgents() {
   return Object.entries(AGENT_CONFIG).filter(([, cfg]) => {
     for (const cmd of cfg.commands) {
       try {
-        execSync(`which ${cmd}`, { stdio: "pipe" });
+        execSync(`which ${cmd} 2>/dev/null || where ${cmd} 2>/dev/null`, {
+          stdio: "pipe",
+        });
         return true;
       } catch {}
     }
@@ -66,6 +108,8 @@ function detectAgents() {
     return false;
   });
 }
+
+// ── 命令: install ───────────────────────────────────────
 
 function installTo(agentKey) {
   const cfg = AGENT_CONFIG[agentKey];
@@ -82,7 +126,9 @@ function installTo(agentKey) {
       console.log(`  ✓ ${cfg.label} → ${dest}`);
       installed = true;
     } catch (err) {
-      console.error(`  ✗ ${cfg.label} install failed (${dest}): ${err.message}`);
+      console.error(
+        `  ✗ ${cfg.label} install failed (${dest}): ${err.message}`
+      );
     }
   }
 
@@ -91,6 +137,8 @@ function installTo(agentKey) {
   }
   return installed;
 }
+
+// ── 命令: uninstall ─────────────────────────────────────
 
 function uninstallFrom(agentKey) {
   const cfg = AGENT_CONFIG[agentKey];
@@ -108,32 +156,114 @@ function uninstallFrom(agentKey) {
   return removed;
 }
 
-// --- main ---
+// ── 命令: list ──────────────────────────────────────────
+
+function listSkills() {
+  console.log("\nInstalled skills:\n");
+  let found = false;
+
+  for (const [, cfg] of Object.entries(AGENT_CONFIG)) {
+    for (const dir of cfg.dirs) {
+      if (!fs.existsSync(dir)) continue;
+      const skills = fs
+        .readdirSync(dir)
+        .filter((name) => fs.statSync(path.join(dir, name)).isDirectory());
+      if (skills.length > 0) {
+        console.log(`  ${cfg.label} (${dir}):`);
+        for (const s of skills) {
+          console.log(`    - ${s}`);
+        }
+        found = true;
+      }
+    }
+  }
+
+  if (!found) {
+    console.log("  (no skills installed)");
+  }
+  console.log();
+}
+
+// ── 命令: status ────────────────────────────────────────
+
+function showStatus() {
+  console.log(`\nSkill: ${SKILL_NAME}\n`);
+  let installed = 0;
+
+  for (const [, cfg] of Object.entries(AGENT_CONFIG)) {
+    for (const dir of cfg.dirs) {
+      const dest = path.join(dir, SKILL_NAME);
+      if (fs.existsSync(dest)) {
+        const files = fs.readdirSync(dest);
+        console.log(`  ✓ ${cfg.label} (${dest})`);
+        for (const f of files) {
+          console.log(`      ${f}`);
+        }
+        installed++;
+      } else {
+        console.log(`  ✗ ${cfg.label} (${dest})`);
+      }
+    }
+  }
+
+  if (installed === 0) {
+    console.log("\n  Not installed anywhere. Run: node install.js");
+  }
+  console.log();
+}
+
+// ── 主入口 ──────────────────────────────────────────────
 
 const args = process.argv.slice(2);
 const helpFlag = args.includes("--help") || args.includes("-h");
 const agentFlagIdx = args.indexOf("--agent");
 const uninstallFlag = args.includes("--uninstall");
+const listFlag = args.includes("--list") || args.includes("-l");
+const statusFlag = args.includes("--status") || args.includes("-s");
+
+function readSkillDescription() {
+  const skillPath = path.join(SKILL_SOURCE, "SKILL.md");
+  if (!fs.existsSync(skillPath)) return "";
+  const content = fs.readFileSync(skillPath, "utf-8");
+  const match = content.match(/^description:\s*(.+)$/m);
+  return match ? match[1].trim() : "";
+}
+
+const SKILL_DESCRIPTION = readSkillDescription();
 
 if (helpFlag) {
+  const agentList = Object.entries(AGENT_CONFIG)
+    .map(([, cfg]) => cfg.label)
+    .join(", ");
   console.log(`
-md-format — Markdown formatting skill for AI coding agents
+${SKILL_NAME} — ${SKILL_DESCRIPTION}
 
 Usage:
-  npx md-format-skill              Auto-detect and install to all available agents
-  npx md-format-skill --agent codex     Install to Codex (CLI + App)
-  npx md-format-skill --agent claude    Install to Claude Code
-  npx md-format-skill --agent all       Install to all supported agents
-  npx md-format-skill --uninstall       Remove from all agents
-  npx md-format-skill --help            Show this help
+  node install.js                   Auto-detect and install
+  node install.js --agent claude    Install to Claude Code only
+  node install.js --agent all       Install to all agents
+  node install.js --uninstall       Remove from all agents
+  node install.js --list            List all installed skills
+  node install.js --status          Show install status
+  node install.js --help            Show this help
 
-Supported agents: codex, claude, opencode
+Supported agents: ${agentList}
 `);
   process.exit(0);
 }
 
+if (listFlag) {
+  listSkills();
+  process.exit(0);
+}
+
+if (statusFlag) {
+  showStatus();
+  process.exit(0);
+}
+
 if (uninstallFlag) {
-  console.log("\nUninstalling md-format...\n");
+  console.log(`\nUninstalling ${SKILL_NAME}...\n`);
   let totalRemoved = 0;
   for (const key of Object.keys(AGENT_CONFIG)) {
     totalRemoved += uninstallFrom(key);
@@ -143,32 +273,49 @@ if (uninstallFlag) {
   process.exit(0);
 }
 
+// install (default)
 let targets;
 if (agentFlagIdx !== -1 && args[agentFlagIdx + 1]) {
   const agent = args[agentFlagIdx + 1];
-  if (agent === "all") {
-    targets = Object.keys(AGENT_CONFIG);
-  } else {
-    targets = [agent];
-  }
+  targets = agent === "all" ? Object.keys(AGENT_CONFIG) : [agent];
 } else {
   const detected = detectAgents();
-  if (detected.length > 0) {
-    targets = detected.map(([key]) => key);
-  } else {
-    targets = Object.keys(AGENT_CONFIG);
-  }
+  targets =
+    detected.length > 0
+      ? detected.map(([key]) => key)
+      : Object.keys(AGENT_CONFIG);
 }
 
-console.log(`\nInstalling md-format skill...\n`);
+console.log(`\nInstalling ${SKILL_NAME} skill...\n`);
 let success = 0;
 for (const key of targets) {
   if (installTo(key)) success++;
 }
 
 if (success === 0) {
-  console.error("\nNo agents installed. Install Codex, Claude Code, or OpenCode first.\n");
+  console.error(
+    `\nNo agents installed. Install ${Object.values(AGENT_CONFIG).map(c => c.label).join(", ")} first.\n`
+  );
   process.exit(1);
 }
 
-console.log(`\nDone! Start a new session and say "格式化md" or "format md" to activate.\n`);
+function getTriggerHints() {
+  const skillPath = path.join(SKILL_SOURCE, "SKILL.md");
+  if (!fs.existsSync(skillPath)) return "";
+  const content = fs.readFileSync(skillPath, "utf-8");
+  const triggers = [];
+  const re = /["""]([^"""]+)["""]/g;
+  let match;
+  while ((match = re.exec(content)) !== null) {
+    triggers.push(match[1]);
+  }
+  // 只取前 2 个作为示例
+  if (triggers.length === 0) return "";
+  if (triggers.length === 1) return `"${triggers[0]}"`;
+  return `"${triggers[0]}" or "${triggers[1]}"`;
+}
+
+const hints = getTriggerHints();
+const triggerMsg = hints ? ` Say ${hints} to activate.` : "";
+
+console.log(`\nDone!${triggerMsg}\n`);
