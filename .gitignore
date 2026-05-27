@@ -1,2 +1,7 @@
 .DS_Store
 node_modules/
+
+# Evaluation outputs (keep test definitions, ignore run results)
+evals/iteration-*/
+evals/*.log
+evals/feedback.json

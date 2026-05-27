@@ -1,0 +1,93 @@
+{
+  "skill_name": "md-format",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我把这段季度销售分析整理成 md 文件：\n\n2024年Q3华东区销售分析\n\n总体情况：本季度华东区总营收 2.85亿元，同比增长12.3%，环比增长5.7%。其中线上渠道贡献1.42亿，占比49.8%。\n\n产品线表现：\n- A系列：营收8500万，毛利率38.2%，同比+18%\n- B系列：营收6200万，毛利率42.1%，同比+5%\n- C系列：营收5800万，毛利率29.7%，同比-3%（受原材料涨价影响）\n- D系列：营收4000万，毛利率51.3%，同比+22%\n\n关键指标：\n客单价从326元提升至385元（+18.1%）\n复购率62.4%（目标60%，达标）\n新客获取成本 CAC = 总营销费用3200万 ÷ 新客数8.3万 = 385.5元/人\n客户终身价值 LTV = 385 × 4.2次 × 3年 = 4851元\n LTV/CAC = 4851 ÷ 385.5 = 12.6（健康值>3）\n\n区域排名：上海>杭州>南京>苏州>合肥\n\n结论：Q3表现良好，D系列高增长值得加大投入，C系列需关注成本控制。",
+      "expected_output": "一份格式化的Markdown文件，包含元信息表、目录、公式在代码块中、表格数据居中对齐，无HTML/LaTeX标签，呈现方式中性客观不偏向财务分析师",
+      "files": [],
+      "expectations": [
+        "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+        "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+        "No CDATA markers present (<![CDATA[ or ]]>)",
+        "All mathematical expressions are inside code blocks (``` fences)",
+        "Contains a metadata table at the top (with | and :---: alignment)",
+        "Contains a table of contents section with anchor links",
+        "Contains a footer/source line at the end",
+        "Numeric columns in tables use center alignment (:---: or :----:)",
+        "Content tone is neutral/informational, not specialized financial advisory language"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "把这段技术方案整理成 md 格式：\n\n微服务网关升级方案 v2.0\n\n背景：当前 Kong 网关单点瓶颈，P99延迟已达280ms（SLA要求<200ms），日均请求量1.2亿次，峰值QPS 8500。\n\n方案选型对比：\n1. Envoy + Istio：性能好，P99可达50ms，但运维复杂度高，需要K8s深度经验\n2. APISIX：国产，性能接近Envoy，社区活跃，插件丰富，学习曲线平缓\n3. 升级Kong Enterprise：兼容现有配置，但license费用高（约45万/年）\n\n决定采用 APISIX，原因：性能满足需求+团队学习成本低+无license费用\n\n迁移步骤：\n阶段一（第1-2周）：搭建 APISIX 集群，配置健康检查、限流、认证插件\n阶段二（第3周）：灰度切流10%内部服务验证\n阶段三（第4周）：全量切换，Kong降级为备用\n阶段四（第5-6周）：监控稳定后下线Kong\n\n风险项：\n- 插件兼容：现有自定义Kong插件需用Lua重写为APISIX插件\n- 配置迁移：约200条路由规则需逐条验证\n- 回滚方案：保留Kong 30天，DNS秒级切回",
+      "expected_output": "格式化的Markdown文件，包含Mermaid流程图展示迁移步骤、方案对比表格、代码块或引用块展示关键指标，图表有style语句着色",
+      "files": [],
+      "expectations": [
+        "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+        "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+        "No CDATA markers present (<![CDATA[ or ]]>)",
+        "Contains at least one Mermaid diagram (```mermaid block)",
+        "Mermaid diagram has style statements with fill/stroke colors",
+        "Contains a metadata table at the top",
+        "Contains a table of contents section with anchor links",
+        "Contains a footer/source line at the end",
+        "Contains a comparison table for the 3 gateway options",
+        "Numeric columns in tables use center alignment (:---: or :----:)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我整理这段会议记录成 md：\n\n产品周会 2024-11-18\n参会人：张明（产品）、李华（开发）、王芳（设计）、赵强（测试）\n\n议题一：v3.2版本进度\n张明：本周完成了用户反馈模块的PRD，已发给开发评审。目标12月5号上线。\n李华：后端API已完成80%，还差消息推送和数据导出两个接口。预计本周三完成。前端同学说表单那块有些复杂，可能delay 2天。\n王芳：设计稿已经定稿了，包括暗黑模式适配。但有个问题——新的 emoji picker 在低端安卓机上性能不好，帧率只有30fps，建议降级处理。\n赵强：测试用例已写完，共218条。自动化覆盖率目前68%，目标80%。\n\n议题二：线上bug处理\n有3个P1 bug需要本周修复：\n1. iOS端偶现闪退（复现率约5%），怀疑内存泄漏\n2. 搜索结果排序错乱，原因是ES索引未及时更新\n3. 第三方支付回调超时导致重复扣款（已影响12个用户，需要退款）\n\n张明：第3个最紧急，今天必须修复。\n李华：同意，我下午就处理。\n\n议题三：下周规划\n- 完成v3.2剩余开发\n- 启动v3.3需求评审（重点：AI助手功能）\n- 安排一次线上压测（目标并发5000）\n\nAction items：\n李华 - 今天修复支付bug，周三完成API\n王芳 - 周二出emoji降级方案\n赵强 - 周五前自动化覆盖率到80%",
+      "expected_output": "格式化的会议记录Markdown，使用引用块展示关键发言，列表展示action items，有元信息表和目录",
+      "files": [],
+      "expectations": [
+        "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+        "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+        "No CDATA markers present (<![CDATA[ or ]]>)",
+        "Contains a metadata table at the top",
+        "Contains a table of contents section with anchor links",
+        "Contains a footer/source line at the end",
+        "Uses blockquotes (>) for key statements or important notes",
+        "Action items are presented in a clear list or table format",
+        "Bug priorities are visually distinguished (bold or table)"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "整理成md格式：\n\n机器学习模型评估指标总结\n\n分类指标：\n准确率 Accuracy = (TP + TN) / (TP + TN + FP + FN)\n精确率 Precision = TP / (TP + FP)\n召回率 Recall = TP / (TP + FN)\nF1 Score = 2 × Precision × Recall / (Precision + Recall)\n\n当类别不均衡时（比如欺诈检测，正样本仅占0.1%），Accuracy没有意义。例：\n假设10000个样本中10个正样本，如果模型全部预测为负：\nAccuracy = 9990/10000 = 99.9%（看似很高）\n但 Recall = 0/10 = 0%（完全没检出）\n\n回归指标：\nMSE = (1/n) × Σ(yi - ŷi)²\nRMSE = √MSE\nMAE = (1/n) × Σ|yi - ŷi|\nR² = 1 - Σ(yi - ŷi)² / Σ(yi - ȳ)²\n\nR²的含义：模型解释了多少比例的方差。R²=0.85意味着模型解释了85%的数据变异。\n\n模型对比（某金融风控场景）：\n逻辑回归：AUC 0.82，推理延迟2ms，可解释性高\nXGBoost：AUC 0.91，推理延迟5ms，可解释性中等\n深度学习：AUC 0.93，推理延迟50ms，可解释性低\n\n选择建议：如果业务要求可解释性（如银行合规），选逻辑回归或XGBoost。追求纯性能且延迟不敏感，选深度学习。",
+      "expected_output": "Markdown文件，所有公式在代码块中展示（非LaTeX），含模型对比表格，有元信息和目录",
+      "files": [],
+      "expectations": [
+        "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+        "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+        "No CDATA markers present (<![CDATA[ or ]]>)",
+        "ALL mathematical formulas are inside code blocks (``` fences), not inline",
+        "Contains a metadata table at the top",
+        "Contains a table of contents section with anchor links",
+        "Contains a footer/source line at the end",
+        "Contains a comparison table for the 3 models",
+        "Numeric columns in tables use center alignment (:---: or :----:)"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "输出md格式：\n\n中国三大云厂商2024年对比\n\n市场份额：阿里云 33%、华为云 19%、腾讯云 16%，其余厂商占32%\n\n核心能力对比：\n阿里云：电商基因，大数据生态最完善（MaxCompute、DataWorks），国际化布局最广（29个region）\n华为云：政企市场强势，自研芯片昇腾+鲲鹏，混合云方案成熟\n腾讯云：社交/游戏基因，音视频能力突出（TRTC），与微信生态深度整合\n\n价格对比（以4C8G通用型实例为例）：\n阿里云：按月398元，按年3980元（年付83折）\n华为云：按月385元，按年3696元（年付80折）\n腾讯云：按月375元，按年3600元（年付80折）\n\nAI能力对比：\n阿里云：通义千问系列（开源），百炼平台\n华为云：盘古大模型，昇腾AI算力\n腾讯云：混元大模型，游戏AI特色场景\n\n数据库服务数量：阿里云15种、华为云12种、腾讯云10种\n\n推荐场景：\n- 电商/大数据/出海 → 阿里云\n- 政府/央企/自主可控 → 华为云\n- 游戏/社交/音视频 → 腾讯云",
+      "expected_output": "Markdown文件，包含市场份额的Mermaid饼图（有style）、多维度对比表格、推荐场景的流程图或分组图",
+      "files": [],
+      "expectations": [
+        "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+        "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+        "No CDATA markers present (<![CDATA[ or ]]>)",
+        "Contains at least one Mermaid diagram (```mermaid block)",
+        "Mermaid diagram has style statements with fill/stroke colors",
+        "Contains a metadata table at the top",
+        "Contains a table of contents section with anchor links",
+        "Contains a footer/source line at the end",
+        "Contains comparison tables with numeric data",
+        "Numeric columns in tables use center alignment (:---: or :----:)",
+        "Market share is visualized (pie chart or equivalent Mermaid)"
+      ]
+    }
+  ]
+}
