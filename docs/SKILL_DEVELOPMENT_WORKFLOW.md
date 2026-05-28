@@ -37,24 +37,37 @@ touch SKILL.md package.json install.js README.md LICENSE .gitignore
 mkdir -p agents
 touch agents/openai.yaml
 
-# 创建评估目录
-mkdir -p evals
+# 创建评估和文档目录
+mkdir -p evals docs
 ```
 
 ### 3. 基础文件模版
 
 #### `.gitignore`
+
 ```
 .DS_Store
 node_modules/
 
-# Evaluation outputs
+# Evaluation outputs (keep test definitions, ignore run results)
 evals/iteration-*/
 evals/*.log
 evals/feedback.json
 ```
 
+#### `.npmignore`
+
+```
+# Development files
+docs/
+evals/
+.git/
+.DS_Store
+.gitignore
+```
+
 #### `package.json`
+
 ```json
 {
   "name": "my-skill-name",
@@ -63,47 +76,29 @@ evals/feedback.json
   "bin": {
     "my-skill-name": "install.js"
   },
-  "files": [
-    "SKILL.md",
-    "install.js",
-    "agents/"
-  ],
-  "keywords": [
-    "skill",
-    "claude-code",
-    "ai-agent"
-  ],
+  "files": ["SKILL.md", "install.js", "agents/"],
+  "keywords": ["skill", "claude-code", "ai-agent"],
   "author": "your-name",
   "license": "MIT"
 }
 ```
 
 #### `install.js`
-```javascript
-#!/usr/bin/env node
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
 
-const skillsDir = path.join(os.homedir(), '.claude', 'skills');
-const skillName = 'my-skill-name';
-const targetDir = path.join(skillsDir, skillName);
+直接从已有 skill 项目复制，零配置通用版。自动从 SKILL.md 读取 name 和 description，支持 `--list`、`--status`、`--uninstall` 命令，跨平台（macOS/Windows/Linux）。
 
-if (!fs.existsSync(skillsDir)) {
-  fs.mkdirSync(skillsDir, { recursive: true });
-}
-
-if (fs.existsSync(targetDir)) {
-  fs.rmSync(targetDir, { recursive: true });
-}
-
-fs.mkdirSync(targetDir, { recursive: true });
-
-const skillFile = path.join(__dirname, 'SKILL.md');
-fs.copyFileSync(skillFile, path.join(targetDir, 'SKILL.md'));
-
-console.log(`✓ Skill installed to ${targetDir}`);
+```bash
+# 从 md-format-skill 复制
+cp /path/to/md-format-skill/install.js .
+# 不需要改任何内容，SKILL_NAME 从 SKILL.md 自动读取
 ```
+
+排除规则（自动排除，不需要配置）：
+
+- 安装脚本和包元数据：`install.js`、`package.json`、`package-lock.json`
+- 开发文件：`docs/`、`evals/`
+- Git 和编辑器：`.git`、`.DS_Store`、`.gitignore`、`node_modules`
+- npm 配置：`.npmignore`
 
 #### `agents/openai.yaml`
 
@@ -113,14 +108,15 @@ Codex App 需要这个文件来识别和展示 skill。每个 skill 都需要创
 interface:
   display_name: "My Skill Name"
   short_description: "一句话描述 skill 功能"
-  brand_color: "#2196F3"       # 品牌 色，用于 Codex App UI
-  default_prompt: "触发提示词"
+  brand_color: "#2196F3" # 品牌 色，用于 Codex App UI
+  default_prompt: "触发提示词" # 默认填充到codex app的提示词
 
 policy:
   allow_implicit_invocation: false
 ```
 
 字段说明：
+
 - `display_name`: 在 Codex App 中显示的名称
 - `short_description`: 简短描述，用于 skill 列表
 - `brand_color`: 十六进制颜色，建议与 skill 主题相关
@@ -131,194 +127,109 @@ policy:
 
 ## 模版 1: 创建新 Skill
 
-### 步骤 1: 定义 Skill 需求
+### 步骤 1: 定义需求
 
-在项目根目录创建 `REQUIREMENTS.md`：
+在项目根目录创建 `REQUIREMENTS.md`（可选，也可以直接写在提示词里）：
 
 ```markdown
 # Skill 需求文档
 
 ## 目标
+
 [描述这个 skill 要解决什么问题]
 
 ## 触发场景
+
 [用户说什么话时应该触发这个 skill]
 
-## 输入
-[skill 需要什么输入]
+## 输入 / 输出
 
-## 输出
-[skill 应该产生什么输出]
+[skill 需要什么输入，产生什么输出]
 
 ## 示例
+
 [3-5 个真实使用场景]
 ```
 
-### 步骤 2: 调用 skill-creator（静默模式）
+### 步骤 2: 一条提示词跑完闭环
 
 ```bash
 # 在项目根目录执行
 claude
 ```
 
-然后输入以下提示词：
-
 ```
 /skill-creator 创建新 skill
 
 需求：
-[粘贴 REQUIREMENTS.md 内容]
+[粘贴需求，或粘贴 REQUIREMENTS.md 内容]
 
-配置要求：
-1. Python 路径：/usr/local/bin/python3  # 替换为你的实际路径
-2. 评估目录：./evals/  # 项目根目录下
-3. 测试模式：静默执行，不开浏览器
-4. 测试用例：设计 3-5 个覆盖不同场景的测试
-5. 评估方式：
-   - 编写自动化断言（evals/grade.py）
-   - 运行 with_skill vs without_skill 对比
-   - 生成 benchmark.json 和文字报告
-   - 不启动浏览器，直接分析测试数据
-   - 基于量化结果和输出文件内容发现问题
-
-输出要求：
-- SKILL.md：完整的 skill 定义
-- evals/evals.json：测试用例
-- evals/grade.py：自动化评分脚本
-- evals/iteration-1/：测试输出和报告
-- 直接告诉我发现的问题和改进建议
+环境：Python3 = /usr/local/bin/python3，macOS。
+约束：
+- 不开浏览器
+- 所有文件（evals/、grade.py、benchmark.json 等）必须在当前项目根目录下，不要创建外部 workspace
+- evals 输出到 ./evals/，iteration 输出到 ./evals/iteration-N/
+最后告诉我：版本号、通过率、遗留问题、是否可发布。
 ```
 
-### 步骤 3: 审查生成的 Skill
+### 步骤 3: 人工审查（可选）
 
 ```bash
-# 查看生成的文件
-ls -la
-cat SKILL.md
-cat evals/evals.json
-
-# 查看测试报告
-cat evals/iteration-1/EVALUATION_REPORT.md
-cat evals/iteration-1/benchmark.json
+cat SKILL.md                              # 查看 skill 内容
+cat evals/iteration-N/EVALUATION_REPORT.md # 查看最终测试报告
+node install.js && node install.js --status # 本地安装验证
 ```
 
-### 步骤 4: 迭代改进
-
-如果测试发现问题，继续对话：
-
-```
-基于测试结果，请改进 SKILL.md 并运行 iteration-2 验证：
-
-发现的问题：
-[列出问题]
-
-改进方向：
-[你的想法]
-
-配置：
-- Python: /usr/local/bin/python3
-- 输出目录: ./evals/iteration-2/
-- 静默执行，不开浏览器
-```
-
-### 步骤 5: 提交版本
+### 步骤 4: 提交和发布
 
 ```bash
-# 暂存核心文件
-git add SKILL.md package.json install.js README.md LICENSE .gitignore
+git add SKILL.md package.json install.js README.md LICENSE .gitignore agents/
 git add evals/evals.json evals/grade.py evals/README.md
-
-# 提交
 git commit -m "feat: initial version of my-skill-name"
-
-# 测试安装
-npm link
-# 或
-node install.js
+npm publish  # 需要先 npm login
 ```
 
 ---
 
 ## 模版 2: 优化现有 Skill
 
-### 步骤 1: 准备优化需求
-
-创建 `OPTIMIZATION.md`：
-
-```markdown
-# 优化需求
-
-## 当前问题
-[描述现有 skill 的问题]
-
-## 优化目标
-[希望达到什么效果]
-
-## 测试场景
-[需要验证的场景]
-```
-
-### 步骤 2: 调用 skill-creator（优化模式）
+### 步骤 1: 一条提示词跑完优化闭环
 
 ```bash
+# 在项目根目录执行
 claude
 ```
-
-输入提示词：
 
 ```
 /skill-creator 优化现有 skill
 
-Skill 路径：./  # 当前项目根目录
+Skill 路径：./
 
-优化需求：
-[粘贴 OPTIMIZATION.md 内容]
+问题：[描述当前 skill 的问题]
+目标：[希望达到什么效果]
 
-配置要求：
-1. Python 路径：/usr/local/bin/python3  # 替换为实际路径
-2. 评估目录：./evals/
-3. 对比基准：
-   - baseline: 当前版本（先备份到 evals/skill-snapshot/）
-   - with_skill: 改进后的版本
-4. 测试模式：静默执行，不开浏览器
-5. 测试用例：
-   - 使用现有的 evals/evals.json
-   - 或设计新的测试用例覆盖问题场景
-6. 评估方式：
-   - 运行自动化断言
-   - 对比新旧版本的 pass rate、time、tokens
-   - 分析具体输出文件找出差异
-   - 不启动浏览器，直接给出分析结论
-
-输出要求：
-- 改进后的 SKILL.md
-- evals/iteration-N/：新的测试结果
-- 对比报告：新版 vs 旧版的改进点
-- 直接告诉我是否达到优化目标
+环境：Python3 = /usr/local/bin/python3，macOS。
+约束：
+- 不开浏览器
+- 所有文件必须在当前项目根目录下，不要创建外部 workspace
+- evals 输出到 ./evals/，iteration 输出到 ./evals/iteration-N/
+最后告诉我：新旧对比、改了什么、遗留问题、是否可发布。
 ```
 
-### 步骤 3: 审查改进效果
+### 步骤 2: 人工审查（可选）
 
 ```bash
-# 查看改进内容
-git diff SKILL.md
-
-# 查看测试对比
-cat evals/iteration-N/EVALUATION_REPORT.md
-
-# 查看 benchmark 对比
-cat evals/iteration-N/benchmark.json | grep -A 5 "delta"
+git diff SKILL.md                              # 查看改了什么
+cat evals/iteration-N/EVALUATION_REPORT.md     # 查看对比报告
+node install.js --status                        # 验证安装
 ```
 
-### 步骤 4: 决定是否采纳
+### 步骤 3: 提交和发布
 
 ```bash
-# 如果改进有效，提交
 git add SKILL.md package.json
-git commit -m "fix: improve [具体改进内容]"
-
-# 如果改进不理想，继续迭代
-# 回到步骤 2，调整优化方向
+git commit -m "fix: [具体改进内容]"
+npm version patch && git push --follow-tags && npm publish
 ```
 
 ---
@@ -328,41 +239,50 @@ git commit -m "fix: improve [具体改进内容]"
 ### 问题 1: Python 环境找不到
 
 **现象**：
+
 ```
 SyntaxError: invalid syntax (Python 2.7)
 ```
 
 **解决**：
+
 - 明确指定 Python 3 路径：`/usr/local/bin/python3`
 - 或在 `evals/grade.py` 第一行改为：`#!/usr/local/bin/python3`
 
-### 问题 2: 评估目录不在项目内
+### 问题 2: 评估目录跑到项目外部
 
 **现象**：
-- 测试输出在 `/Users/xxx/skill-workspace/` 外部目录
-- 无法纳入 git 管理
+
+- skill-creator 在 `../skill-workspace/` 或其他外部目录创建测试输出
+- 无法纳入 git 管理，下次找不到
 
 **解决**：
-- 在提示词中明确指定：`评估目录：./evals/`
-- 确保 skill-creator 在项目根目录创建 `evals/iteration-N/`
+
+- 提示词约束已内置：`所有文件必须在当前项目根目录下，不要创建外部 workspace`
+- 如果仍然跑到外部，检查提示词是否包含此约束
 
 ### 问题 3: 浏览器自动打开浪费 token
 
 **现象**：
-- 生成 HTML 评审页面并打开浏览器
+
+- skill-creator 默认生成 HTML 评审页面并打开浏览器
 - 人工审查效率低，Claude 分析更准确
 
 **解决**：
-- 在提示词中明确：`静默执行，不开浏览器`
-- 让 Claude 直接读取测试输出文件和 benchmark.json 分析
+
+- 在提示词的硬性约束中已内置：`不启动浏览器，不生成 HTML 评审页面`
+- Claude 直接读取测试输出文件和 benchmark.json 分析问题
+- 如果 Claude 仍然生成了浏览器页面，检查提示词是否包含硬性约束
 
 ### 问题 4: 测试用例不够全面
 
 **现象**：
+
 - 只测试了正常场景
 - 边缘情况未覆盖
 
 **解决**：
+
 - 在 `evals/evals.json` 中添加：
   - 边缘输入（空值、超长文本、特殊字符）
   - 错误场景（格式错误、缺失字段）
@@ -371,10 +291,12 @@ SyntaxError: invalid syntax (Python 2.7)
 ### 问题 5: 断言检查不够严格
 
 **现象**：
+
 - 测试通过但实际输出有问题
 - 断言只检查存在性，不检查正确性
 
 **解决**：
+
 - 在 `evals/grade.py` 中增强检查：
   - 不仅检查"是否有表格"，还要检查"表格内容是否正确"
   - 不仅检查"是否有 Mermaid"，还要检查"节点数量和连接关系"
@@ -383,9 +305,11 @@ SyntaxError: invalid syntax (Python 2.7)
 ### 问题 6: 版本号忘记更新
 
 **现象**：
+
 - 改进了 SKILL.md 但 package.json 版本号没变
 
 **解决**：
+
 - 在提示词中要求：`同时更新 package.json 版本号`
 - 遵循语义化版本：
   - 修复 bug：1.0.0 → 1.0.1
@@ -405,6 +329,7 @@ node install.js --list
 ```
 
 输出示例：
+
 ```
 Installed skills:
 
@@ -420,6 +345,7 @@ node install.js --status
 ```
 
 输出示例：
+
 ```
 Skill: md-format
 
@@ -435,6 +361,7 @@ node install.js --uninstall
 ```
 
 这会从以下所有目录中删除 skill：
+
 - `~/.claude/skills/` (Claude Code)
 - `~/.codex/skills/` (Codex)
 - `~/.agents/skills/` (Agents)
@@ -491,19 +418,19 @@ npm 包通过 `package.json` 的 `files` 字段控制打包范围。原则：**�
 
 #### 文件分类
 
-| 文件/目录 | npm 打包 | 安装到 agent skills | 原因 |
-|:--|:--:|:--:|:--|
-| `SKILL.md` | ✅ | ✅ | Skill 核心定义，必须 |
-| `install.js` | ✅ | ❌ | 安装脚本，执行完不需要 |
-| `package.json` | ✅ | ❌ | npm 元数据 |
-| `agents/openai.yaml` | ✅ | ✅ | Codex App 配置，必须 |
-| `README.md` | 自动 | ❌ | 用户文档 |
-| `LICENSE` | 自动 | ❌ | 许可证 |
-| `references/` | 视情况 | ✅ | 参考文档，大 skill 需要 |
-| `scripts/` | 视情况 | ✅ | 可执行脚本，skill 调用的工具 |
-| `assets/` | 视情况 | ✅ | 模板、图片等资源 |
-| `docs/` | ❌ | ❌ | 开发文档 |
-| `evals/` | ❌ | ❌ | 测试数据，仅供开发 |
+| 文件/目录            | npm 打包 | 安装到 agent skills | 原因                         |
+| :------------------- | :------: | :-----------------: | :--------------------------- |
+| `SKILL.md`           |    ✅    |         ✅          | Skill 核心定义，必须         |
+| `install.js`         |    ✅    |         ❌          | 安装脚本，执行完不需要       |
+| `package.json`       |    ✅    |         ❌          | npm 元数据                   |
+| `agents/openai.yaml` |    ✅    |         ✅          | Codex App 配置，必须         |
+| `README.md`          |   自动   |         ❌          | 用户文档                     |
+| `LICENSE`            |   自动   |         ❌          | 许可证                       |
+| `references/`        |  视情况  |         ✅          | 参考文档，大 skill 需要      |
+| `scripts/`           |  视情况  |         ✅          | 可执行脚本，skill 调用的工具 |
+| `assets/`            |  视情况  |         ✅          | 模板、图片等资源             |
+| `docs/`              |    ❌    |         ❌          | 开发文档                     |
+| `evals/`             |    ❌    |         ❌          | 测试数据，仅供开发           |
 
 #### package.json 的 files 字段
 
@@ -520,11 +447,13 @@ npm 包通过 `package.json` 的 `files` 字段控制打包范围。原则：**�
 
 #### install.js 的复制逻辑
 
-当前 install.js 用 `copyRecursive` 从 npm 包根目录递归复制所有文件到 `~/.claude/skills/`，排除 `install.js`、`package.json`、`package-lock.json`。这意味着：
+install.js 从 npm 包根目录递归复制所有文件到 agent skills 目录，自动排除：
 
-- `files` 字段控制什么进入 npm 包
-- install.js 自动复制 npm 包里除排除列表外的所有内容
-- **你只需要维护 `files` 字段**，install.js 不需要改
+- 安装脚本和包元数据（install.js、package.json）
+- 开发文件（docs/、evals/）
+- Git 和编辑器文件（.git、.DS_Store）
+
+你只需要维护 `package.json` 的 `files` 字段（控制 npm 打包），install.js 的排除列表是通用的，不需要改。
 
 #### 用 npm pack 验证
 
@@ -669,24 +598,29 @@ git init
 # JSON 格式化 Skill
 
 ## 目标
+
 将任意 JSON 数据格式化为美观、易读的格式
 
 ## 触发场景
+
 - "格式化这段 JSON"
 - "美化 JSON"
 - "JSON pretty print"
 
 ## 输入
+
 - 压缩的 JSON 字符串
 - 或 JSON 文件路径
 
 ## 输出
+
 - 缩进 2 空格
 - 键按字母排序
 - 数组元素保持原顺序
 - 保存到文件或输出到终端
 
 ## 示例
+
 1. 格式化 API 响应
 2. 格式化配置文件
 3. 格式化嵌套深层 JSON
@@ -697,13 +631,11 @@ git init
 ```
 /skill-creator 创建新 skill
 
-需求：[粘贴上述需求]
+需求：将任意 JSON 数据格式化为美观、易读的格式。触发场景："格式化这段 JSON"、"美化 JSON"。输出：缩进2空格，键按字母排序，保存到文件。
 
-配置：
-- Python: /usr/local/bin/python3
-- 评估目录: ./evals/
-- 静默执行，不开浏览器
-- 测试用例：3 个（简单对象、嵌套数组、深层嵌套）
+环境：Python3 = /usr/local/bin/python3，macOS，不开浏览器，evals 输出到 ./evals/。
+自主跑完六阶段闭环，迭代直到通过率 >= 90%。
+最后告诉我：版本号、通过率、遗留问题、是否可发布。
 ```
 
 ### 4. 审查和提交
@@ -730,16 +662,18 @@ git commit -m "feat: initial version of json-format-skill"
 - [ ] 项目目录已创建
 - [ ] Python 路径已确认
 - [ ] 需求文档已准备
-- [ ] .gitignore 已配置
-- [ ] 基础文件已创建（package.json, install.js）
-- [ ] skill-creator 提示词包含所有配置
+- [ ] .gitignore 和 .npmignore 已配置
+- [ ] 基础文件已创建（package.json, install.js, agents/openai.yaml）
+- [ ] install.js 是通用版（从已有项目复制，零配置）
+- [ ] package.json 的 files 包含 `agents/`
+- [ ] skill-creator 提示词包含环境信息和硬性约束
 - [ ] 测试用例覆盖主要场景
 - [ ] 断言检查足够严格
 - [ ] 测试报告已审查
 - [ ] 版本号已设置
 - [ ] README 已编写
-- [ ] 已本地安装测试（`node install.js`）
-- [ ] `npm pack --dry-run` 输出干净
+- [ ] 已本地安装测试（`node install.js && node install.js --status`）
+- [ ] `npm pack --dry-run` 输出干净（无 evals、docs、.git）
 
 ### 优化现有 Skill 时
 
@@ -759,57 +693,6 @@ git commit -m "feat: initial version of json-format-skill"
 
 ---
 
-## 附录：提示词模版速查
-
-### 创建新 Skill（复制粘贴）
-
-```
-/skill-creator 创建新 skill
-
-需求：
-[粘贴需求文档]
-
-配置要求：
-1. Python 路径：/usr/local/bin/python3
-2. 评估目录：./evals/
-3. 测试模式：静默执行，不开浏览器
-4. 测试用例：3-5 个覆盖不同场景
-5. 评估方式：自动化断言 + benchmark 对比，直接分析数据
-
-输出要求：
-- SKILL.md
-- evals/evals.json
-- evals/grade.py
-- evals/iteration-1/
-- 直接告诉我发现的问题
-```
-
-### 优化现有 Skill（复制粘贴）
-
-```
-/skill-creator 优化现有 skill
-
-Skill 路径：./
-
-优化需求：
-[描述问题和目标]
-
-配置要求：
-1. Python 路径：/usr/local/bin/python3
-2. 评估目录：./evals/
-3. 对比基准：当前版本（先备份）
-4. 测试模式：静默执行，不开浏览器
-5. 评估方式：新旧版本对比，直接分析差异
-
-输出要求：
-- 改进后的 SKILL.md
-- evals/iteration-N/
-- 对比报告
-- 是否达到优化目标
-```
-
----
-
-**版本**: 1.1
+**版本**: 3.0
 **更新日期**: 2026-05-27
 **适用于**: Claude Code + skill-creator
