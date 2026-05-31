@@ -1,0 +1,18 @@
+{
+  "eval_id": 5,
+  "eval_name": "data-comparison",
+  "prompt": "输出md格式：\n\n中国三大云厂商2024年对比\n\n市场份额：阿里云 33%、华为云 19%、腾讯云 16%，其余厂商占32%\n\n核心能力对比：\n阿里云：电商基因，大数据生态最完善（MaxCompute、DataWorks），国际化布局最广（29个region）\n华为云：政企市场强势，自研芯片昇腾+鲲鹏，混合云方案成熟\n腾讯云：社交/游戏基因，音视频能力突出（TRTC），与微信生态深度整合\n\n价格对比（以4C8G通用型实例为例）：\n阿里云：按月398元，按年3980元（年付83折）\n华为云：按月385元，按年3696元（年付80折）\n腾讯云：按月375元，按年3600元（年付80折）\n\nAI能力对比：\n阿里云：通义千问系列（开源），百炼平台\n华为云：盘古大模型，昇腾AI算力\n腾讯云：混元大模型，游戏AI特色场景\n\n数据库服务数量：阿里云15种、华为云12种、腾讯云10种\n\n推荐场景：\n- 电商/大数据/出海 → 阿里云\n- 政府/央企/自主可控 → 华为云\n- 游戏/社交/音视频 → 腾讯云",
+  "assertions": [
+    "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+    "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+    "No CDATA markers present (<![CDATA[ or ]]>)",
+    "Contains at least one Mermaid diagram (```mermaid block)",
+    "Mermaid diagram has style statements with fill/stroke colors",
+    "Contains a metadata table at the top",
+    "Contains a table of contents section with anchor links",
+    "Contains a footer/source line at the end",
+    "Contains comparison tables with numeric data",
+    "Numeric columns in tables use center alignment (:---: or :----:)",
+    "Market share is visualized (pie chart or equivalent Mermaid)"
+  ]
+}

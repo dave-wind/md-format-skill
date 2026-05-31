@@ -1,0 +1,55 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "ALL mathematical formulas are inside code blocks (``` fences), not inline",
+      "passed": true,
+      "evidence": "All formulas in code blocks"
+    },
+    {
+      "text": "Contains a metadata table at the top",
+      "passed": true,
+      "evidence": "Found metadata table with 17 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": false,
+      "evidence": "No TOC or insufficient anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": false,
+      "evidence": "No footer pattern found"
+    },
+    {
+      "text": "Contains a comparison table for the 3 models",
+      "passed": true,
+      "evidence": "Found 3 comparison table(s)"
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": false,
+      "evidence": "No center-aligned columns found"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 3,
+    "total": 9,
+    "pass_rate": 0.6666666666666666
+  }
+}

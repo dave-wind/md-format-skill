@@ -1,0 +1,60 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "Contains at least one Mermaid diagram (```mermaid block)",
+      "passed": true,
+      "evidence": "Found 1 Mermaid diagram(s)"
+    },
+    {
+      "text": "Mermaid diagram has style statements with fill/stroke colors",
+      "passed": true,
+      "evidence": "Mermaid styles: ['Block 1 has 4 style statements']"
+    },
+    {
+      "text": "Contains a metadata table at the top",
+      "passed": true,
+      "evidence": "Found metadata table with 15 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": true,
+      "evidence": "Found TOC with 5 anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": true,
+      "evidence": "Found footer: ---\n\n*基础架构组 | 2026-05-27*..."
+    },
+    {
+      "text": "Contains a comparison table for the 3 gateway options",
+      "passed": true,
+      "evidence": "Found 5 comparison table(s)"
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": true,
+      "evidence": "Found 6 center-aligned columns"
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 0,
+    "total": 10,
+    "pass_rate": 1.0
+  }
+}

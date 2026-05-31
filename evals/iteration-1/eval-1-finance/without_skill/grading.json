@@ -1,0 +1,55 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac, \\boxed{})",
+      "passed": false,
+      "evidence": "Found LaTeX: ['$$', '$$', '$$']"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "All mathematical expressions are inside code blocks (``` fences)",
+      "passed": true,
+      "evidence": "All formulas in code blocks"
+    },
+    {
+      "text": "Contains a metadata table at the top (with | and :---: alignment)",
+      "passed": true,
+      "evidence": "Found metadata table with 6 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": false,
+      "evidence": "No TOC or insufficient anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": false,
+      "evidence": "No footer pattern found"
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": true,
+      "evidence": "Found 5 center-aligned columns"
+    },
+    {
+      "text": "Content tone is neutral/informational, not specialized financial advisory language",
+      "passed": true,
+      "evidence": "Tone is neutral/informational"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 3,
+    "total": 9,
+    "pass_rate": 0.6666666666666666
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "eval_id": 2,
+  "eval_name": "tech-doc",
+  "prompt": "把这段技术方案整理成 md 格式：\n\n微服务网关升级方案 v2.0\n\n背景：当前 Kong 网关单点瓶颈，P99延迟已达280ms（SLA要求<200ms），日均请求量1.2亿次，峰值QPS 8500。\n\n方案选型对比：\n1. Envoy + Istio：性能好，P99可达50ms，但运维复杂度高，需要K8s深度经验\n2. APISIX：国产，性能接近Envoy，社区活跃，插件丰富，学习曲线平缓\n3. 升级Kong Enterprise：兼容现有配置，但license费用高（约45万/年）\n\n决定采用 APISIX，原因：性能满足需求+团队学习成本低+无license费用\n\n迁移步骤：\n阶段一（第1-2周）：搭建 APISIX 集群，配置健康检查、限流、认证插件\n阶段二（第3周）：灰度切流10%内部服务验证\n阶段三（第4周）：全量切换，Kong降级为备用\n阶段四（第5-6周）：监控稳定后下线Kong\n\n风险项：\n- 插件兼容：现有自定义Kong插件需用Lua重写为APISIX插件\n- 配置迁移：约200条路由规则需逐条验证\n- 回滚方案：保留Kong 30天，DNS秒级切回",
+  "assertions": [
+    "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+    "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+    "No CDATA markers present (<![CDATA[ or ]]>)",
+    "Contains at least one Mermaid diagram (```mermaid block)",
+    "Mermaid diagram has style statements with fill/stroke colors",
+    "Contains a metadata table at the top",
+    "Contains a table of contents section with anchor links",
+    "Contains a footer/source line at the end",
+    "Contains a comparison table for the 3 gateway options",
+    "Numeric columns in tables use center alignment (:---: or :----:)"
+  ]
+}

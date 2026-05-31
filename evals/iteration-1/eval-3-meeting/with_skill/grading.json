@@ -1,0 +1,55 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "Contains a metadata table at the top",
+      "passed": true,
+      "evidence": "Found metadata table with 17 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": true,
+      "evidence": "Found TOC with 4 anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": true,
+      "evidence": "Found footer: ---\n\n*产品周会纪要 | 2024-11-18*..."
+    },
+    {
+      "text": "Uses blockquotes (>) for key statements or important notes",
+      "passed": true,
+      "evidence": "Found 2 blockquote lines"
+    },
+    {
+      "text": "Action items are presented in a clear list or table format",
+      "passed": true,
+      "evidence": "Found action items in table format"
+    },
+    {
+      "text": "Bug priorities are visually distinguished (bold or table)",
+      "passed": false,
+      "evidence": "Bug priorities not visually distinguished"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 1,
+    "total": 9,
+    "pass_rate": 0.8888888888888888
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "Contains at least one Mermaid diagram (```mermaid block)",
+      "passed": false,
+      "evidence": "No Mermaid diagrams found"
+    },
+    {
+      "text": "Mermaid diagram has style statements with fill/stroke colors",
+      "passed": false,
+      "evidence": "No Mermaid blocks found"
+    },
+    {
+      "text": "Contains a metadata table at the top",
+      "passed": true,
+      "evidence": "Found metadata table with 20 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": false,
+      "evidence": "No TOC or insufficient anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": true,
+      "evidence": "Found footer: | **插件兼容** | 现有自定义 Kong 插件需用 Lua 重写为 APISIX 插件 |\n|..."
+    },
+    {
+      "text": "Contains a comparison table for the 3 gateway options",
+      "passed": true,
+      "evidence": "Found 4 comparison table(s)"
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": false,
+      "evidence": "No center-aligned columns found"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 4,
+    "total": 10,
+    "pass_rate": 0.6
+  }
+}

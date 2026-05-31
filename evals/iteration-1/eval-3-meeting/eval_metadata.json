@@ -1,0 +1,16 @@
+{
+  "eval_id": 3,
+  "eval_name": "meeting-notes",
+  "prompt": "帮我整理这段会议记录成 md：\n\n产品周会 2024-11-18\n参会人：张明（产品）、李华（开发）、王芳（设计）、赵强（测试）\n\n议题一：v3.2版本进度\n张明：本周完成了用户反馈模块的PRD，已发给开发评审。目标12月5号上线。\n李华：后端API已完成80%，还差消息推送和数据导出两个接口。预计本周三完成。前端同学说表单那块有些复杂，可能delay 2天。\n王芳：设计稿已经定稿了，包括暗黑模式适配。但有个问题——新的 emoji picker 在低端安卓机上性能不好，帧率只有30fps，建议降级处理。\n赵强：测试用例已写完，共218条。自动化覆盖率目前68%，目标80%。\n\n议题二：线上bug处理\n有3个P1 bug需要本周修复：\n1. iOS端偶现闪退（复现率约5%），怀疑内存泄漏\n2. 搜索结果排序错乱，原因是ES索引未及时更新\n3. 第三方支付回调超时导致重复扣款（已影响12个用户，需要退款）\n\n张明：第3个最紧急，今天必须修复。\n李华：同意，我下午就处理。\n\n议题三：下周规划\n- 完成v3.2剩余开发\n- 启动v3.3需求评审（重点：AI助手功能）\n- 安排一次线上压测（目标并发5000）\n\nAction items：\n李华 - 今天修复支付bug，周三完成API\n王芳 - 周二出emoji降级方案\n赵强 - 周五前自动化覆盖率到80%",
+  "assertions": [
+    "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+    "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+    "No CDATA markers present (<![CDATA[ or ]]>)",
+    "Contains a metadata table at the top",
+    "Contains a table of contents section with anchor links",
+    "Contains a footer/source line at the end",
+    "Uses blockquotes (>) for key statements or important notes",
+    "Action items are presented in a clear list or table format",
+    "Bug priorities are visually distinguished (bold or table)"
+  ]
+}

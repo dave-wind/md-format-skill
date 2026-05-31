@@ -1,0 +1,16 @@
+{
+  "eval_id": 4,
+  "eval_name": "math-formulas",
+  "prompt": "整理成md格式：\n\n机器学习模型评估指标总结\n\n分类指标：\n准确率 Accuracy = (TP + TN) / (TP + TN + FP + FN)\n精确率 Precision = TP / (TP + FP)\n召回率 Recall = TP / (TP + FN)\nF1 Score = 2 × Precision × Recall / (Precision + Recall)\n\n当类别不均衡时（比如欺诈检测，正样本仅占0.1%），Accuracy没有意义。例：\n假设10000个样本中10个正样本，如果模型全部预测为负：\nAccuracy = 9990/10000 = 99.9%（看似很高）\n但 Recall = 0/10 = 0%（完全没检出）\n\n回归指标：\nMSE = (1/n) × Σ(yi - ŷi)²\nRMSE = √MSE\nMAE = (1/n) × Σ|yi - ŷi|\nR² = 1 - Σ(yi - ŷi)² / Σ(yi - ȳ)²\n\nR²的含义：模型解释了多少比例的方差。R²=0.85意味着模型解释了85%的数据变异。\n\n模型对比（某金融风控场景）：\n逻辑回归：AUC 0.82，推理延迟2ms，可解释性高\nXGBoost：AUC 0.91，推理延迟5ms，可解释性中等\n深度学习：AUC 0.93，推理延迟50ms，可解释性低\n\n选择建议：如果业务要求可解释性（如银行合规），选逻辑回归或XGBoost。追求纯性能且延迟不敏感，选深度学习。",
+  "assertions": [
+    "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+    "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+    "No CDATA markers present (<![CDATA[ or ]]>)",
+    "ALL mathematical formulas are inside code blocks (``` fences), not inline",
+    "Contains a metadata table at the top",
+    "Contains a table of contents section with anchor links",
+    "Contains a footer/source line at the end",
+    "Contains a comparison table for the 3 models",
+    "Numeric columns in tables use center alignment (:---: or :----:)"
+  ]
+}

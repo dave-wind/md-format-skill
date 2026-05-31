@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "eval_name": "finance-data",
+  "prompt": "帮我把这段季度销售分析整理成 md 文件：\n\n2024年Q3华东区销售分析\n\n总体情况：本季度华东区总营收 2.85亿元，同比增长12.3%，环比增长5.7%。其中线上渠道贡献1.42亿，占比49.8%。\n\n产品线表现：\n- A系列：营收8500万，毛利率38.2%，同比+18%\n- B系列：营收6200万，毛利率42.1%，同比+5%\n- C系列：营收5800万，毛利率29.7%，同比-3%（受原材料涨���影响）\n- D系列：营收4000万，毛利率51.3%，同比+22%\n\n关键指标：\n客单价从326元提升至385元（+18.1%）\n复购率62.4%（目标60%，达标）\n新客获取成本 CAC = 总营销费用3200万 ÷ 新客数8.3万 = 385.5元/人\n客户终身价值 LTV = 385 × 4.2次 × 3年 = 4851元\n LTV/CAC = 4851 ÷ 385.5 = 12.6（健康值>3）\n\n区域排名：上海>杭州>南京>苏州>合肥\n\n结论：Q3表现良好，D系列高增长值得加大投入，C系列需关��成本控制。",
+  "assertions": [
+    "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+    "No LaTeX syntax present ($$, $, \\text{}, \\frac, \\boxed{})",
+    "No CDATA markers present (<![CDATA[ or ]]>)",
+    "All mathematical expressions are inside code blocks (``` fences)",
+    "Contains a metadata table at the top (with | and :---: alignment)",
+    "Contains a table of contents section with anchor links",
+    "Contains a footer/source line at the end",
+    "Numeric columns in tables use center alignment (:---: or :----:)",
+    "Content tone is neutral/informational, not specialized financial advisory language"
+  ]
+}

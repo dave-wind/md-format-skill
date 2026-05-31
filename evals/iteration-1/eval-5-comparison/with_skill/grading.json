@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "Contains at least one Mermaid diagram (```mermaid block)",
+      "passed": true,
+      "evidence": "Found 2 Mermaid diagram(s)"
+    },
+    {
+      "text": "Mermaid diagram has style statements with fill/stroke colors",
+      "passed": false,
+      "evidence": "Mermaid styles: ['Block 1 missing style statements', 'Block 2 has 7 style statements']"
+    },
+    {
+      "text": "Contains a metadata table at the top",
+      "passed": true,
+      "evidence": "Found metadata table with 17 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": true,
+      "evidence": "Found TOC with 6 anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": true,
+      "evidence": "Found footer: ---\n\n*行业分析整理 | 2024*..."
+    },
+    {
+      "text": "Contains comparison tables with numeric data",
+      "passed": true,
+      "evidence": "Found 7 comparison table(s)"
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": true,
+      "evidence": "Found 7 center-aligned columns"
+    },
+    {
+      "text": "Market share is visualized (pie chart or equivalent Mermaid)",
+      "passed": true,
+      "evidence": "Found 2 Mermaid diagram(s)"
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 1,
+    "total": 11,
+    "pass_rate": 0.9090909090909091
+  }
+}

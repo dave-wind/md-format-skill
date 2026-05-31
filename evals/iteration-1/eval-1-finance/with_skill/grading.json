@@ -1,0 +1,55 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "All mathematical expressions are inside code blocks (``` fences)",
+      "passed": false,
+      "evidence": "Found formulas outside code blocks: ['CAC = 12.6**']"
+    },
+    {
+      "text": "Contains a metadata table at the top (with | and :---: alignment)",
+      "passed": true,
+      "evidence": "Found metadata table with 15 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": true,
+      "evidence": "Found TOC with 5 anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": true,
+      "evidence": "Found footer: ---\n\n*华东区销售部 | 2024-09-30*..."
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": true,
+      "evidence": "Found 10 center-aligned columns"
+    },
+    {
+      "text": "Content tone is neutral/informational, not specialized financial advisory language",
+      "passed": true,
+      "evidence": "Tone is neutral/informational"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 1,
+    "total": 9,
+    "pass_rate": 0.8888888888888888
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "metadata": {
+    "skill_name": "md-format",
+    "skill_path": "/Users/dave.wind/dave/AI/md-format-skill",
+    "executor_model": "claude-opus-4-7",
+    "timestamp": "2026-05-27T00:00:00Z",
+    "evals_run": [1, 2, 3, 4, 5],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "finance-data",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.89,
+        "passed": 8,
+        "failed": 1,
+        "total": 9,
+        "time_seconds": 91.8,
+        "tokens": 10437,
+        "tool_calls": 5,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "finance-data",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 6,
+        "failed": 3,
+        "total": 9,
+        "time_seconds": 65.1,
+        "tokens": 6496,
+        "tool_calls": 2,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "tech-doc",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 94.9,
+        "tokens": 10116,
+        "tool_calls": 6,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "tech-doc",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 6,
+        "failed": 4,
+        "total": 10,
+        "time_seconds": 36.5,
+        "tokens": 6542,
+        "tool_calls": 2,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "meeting-notes",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.89,
+        "passed": 8,
+        "failed": 1,
+        "total": 9,
+        "time_seconds": 123.3,
+        "tokens": 26338,
+        "tool_calls": 4,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "meeting-notes",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 6,
+        "failed": 3,
+        "total": 9,
+        "time_seconds": 48.1,
+        "tokens": 6653,
+        "tool_calls": 2,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "math-formulas",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 9,
+        "failed": 0,
+        "total": 9,
+        "time_seconds": 153.5,
+        "tokens": 27666,
+        "tool_calls": 6,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "math-formulas",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.67,
+        "passed": 6,
+        "failed": 3,
+        "total": 9,
+        "time_seconds": 64.8,
+        "tokens": 6608,
+        "tool_calls": 2,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "data-comparison",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.91,
+        "passed": 10,
+        "failed": 1,
+        "total": 11,
+        "time_seconds": 125.0,
+        "tokens": 26089,
+        "tool_calls": 3,
+        "errors": 0
+      }
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "data-comparison",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.55,
+        "passed": 6,
+        "failed": 5,
+        "total": 11,
+        "time_seconds": 70.2,
+        "tokens": 6579,
+        "tool_calls": 2,
+        "errors": 0
+      }
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.94, "stddev": 0.05, "min": 0.89, "max": 1.0},
+      "time_seconds": {"mean": 117.7, "stddev": 24.3, "min": 91.8, "max": 153.5},
+      "tokens": {"mean": 20129, "stddev": 8645, "min": 10116, "max": 27666}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.63, "stddev": 0.05, "min": 0.55, "max": 0.67},
+      "time_seconds": {"mean": 56.9, "stddev": 14.3, "min": 36.5, "max": 70.2},
+      "tokens": {"mean": 6576, "stddev": 60, "min": 6496, "max": 6653}
+    },
+    "delta": {
+      "pass_rate": "+0.31",
+      "time_seconds": "+60.8",
+      "tokens": "+13553"
+    }
+  },
+  "notes": [
+    "With-skill configuration achieves 94% average pass rate vs 63% baseline (+31 percentage points)",
+    "All 'no HTML/LaTeX/CDATA' assertions pass 100% with skill, baseline also passes these",
+    "Key differentiators: TOC with anchor links (skill: 80% pass, baseline: 0%), Mermaid diagrams with styles (skill: 60% pass, baseline: 0%), footer lines (skill: 100%, baseline: 40%)",
+    "Baseline consistently fails on: table of contents, Mermaid diagrams, center-aligned numeric columns, footer formatting",
+    "Finance eval (eval-1): with_skill has 1 failure (formula outside code block), baseline uses LaTeX $$",
+    "Meeting notes (eval-3): both configurations miss bug priority visual distinction",
+    "Data comparison (eval-5): with_skill has 1 Mermaid block missing styles (pie chart), baseline has no Mermaid at all",
+    "Skill adds ~61 seconds execution time but uses 3x more tokens due to richer formatting (Mermaid, structured sections)",
+    "Trade-off: skill produces spec-compliant output at cost of 2x execution time and 3x token usage"
+  ]
+}

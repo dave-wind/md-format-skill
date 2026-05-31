@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "No HTML tags present (<div>, <span>, <br>, <center>, <img>)",
+      "passed": true,
+      "evidence": "No HTML tags found"
+    },
+    {
+      "text": "No LaTeX syntax present ($$, $, \\text{}, \\frac{}, \\boxed{})",
+      "passed": true,
+      "evidence": "No LaTeX syntax found"
+    },
+    {
+      "text": "No CDATA markers present (<![CDATA[ or ]]>)",
+      "passed": true,
+      "evidence": "No CDATA markers found"
+    },
+    {
+      "text": "Contains at least one Mermaid diagram (```mermaid block)",
+      "passed": false,
+      "evidence": "No Mermaid diagrams found"
+    },
+    {
+      "text": "Mermaid diagram has style statements with fill/stroke colors",
+      "passed": false,
+      "evidence": "No Mermaid blocks found"
+    },
+    {
+      "text": "Contains a metadata table at the top",
+      "passed": true,
+      "evidence": "Found metadata table with 26 rows"
+    },
+    {
+      "text": "Contains a table of contents section with anchor links",
+      "passed": false,
+      "evidence": "No TOC or insufficient anchor links"
+    },
+    {
+      "text": "Contains a footer/source line at the end",
+      "passed": true,
+      "evidence": "Found footer: | 电商 / 大数据 / 出海 | **阿里云** |\n| 政府 / 央企 / 自主可控 | **华..."
+    },
+    {
+      "text": "Contains comparison tables with numeric data",
+      "passed": true,
+      "evidence": "Found 6 comparison table(s)"
+    },
+    {
+      "text": "Numeric columns in tables use center alignment (:---: or :----:)",
+      "passed": false,
+      "evidence": "No center-aligned columns found"
+    },
+    {
+      "text": "Market share is visualized (pie chart or equivalent Mermaid)",
+      "passed": false,
+      "evidence": "No Mermaid diagrams found"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 5,
+    "total": 11,
+    "pass_rate": 0.5454545454545454
+  }
+}
